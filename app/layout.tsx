@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "./_components/sidebar";
+import Sidebar from "../components/sidebar";
+import { Toast, ToastAction } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} flex flex-row`}>
         <Sidebar />
-        <div className="p-10">
+        <div className="p-10 flex flex-col w-screen h-screen">
           {children}
         </div>
+        <Toaster />
       </body>
     </html>
   );
