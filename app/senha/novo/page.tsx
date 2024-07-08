@@ -90,7 +90,7 @@ const CreateProntuario = () => {
                 description: prontuarioCriado.message
             })
 
-            router.push('/prontuario');
+            router.push('/senha');
             
         }).catch(erro => {
             toast({

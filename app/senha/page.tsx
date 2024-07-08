@@ -48,7 +48,7 @@ function ProntuarioPage() {
     const medicalRecordService = new MedicalRecordService();
 
     const handleNovoProntuario = () => {
-        router.push('/prontuario/novo');
+        router.push('/senha/novo');
     }
 
     const [prontuarios, setProntuarios] = useState<MedicalRecordProps[]>([]);
@@ -63,8 +63,8 @@ function ProntuarioPage() {
 
     return (
         <div className="overflow-auto">
-            <h1 className="text-3xl font-bold">Gerenciar Prontuários</h1>
-            <Button onClick={handleNovoProntuario} className="w-[200px] mt-6 bg-green-500 text-white  hover:bg-green-600 hover:text-white" variant="outline">Novo Prontuário</Button>
+            <h1 className="text-3xl font-bold">Gerenciar Senhas</h1>
+            <Button onClick={handleNovoProntuario} className="w-[200px] mt-6 bg-green-500 text-white  hover:bg-green-600 hover:text-white" variant="outline">Nova Senha</Button>
 
             <ProntuarioTable columns={columns} data={prontuarios}/>
 

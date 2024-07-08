@@ -53,11 +53,11 @@ const ProntuarioTable = ({ columns, data }: { columns: Column[]; data: MedicalRe
     const medicalRecordService = new MedicalRecordService();
 
     const handleVisualizeProntuario = (id: number) => {
-        push(`/prontuario/visualizar/${id}`)
+        push(`/senha/visualizar/${id}`)
     };
 
     const handleEditProntuario= (id: number) => {
-        push(`/prontuario/editar/${id}`)
+        push(`/senha/editar/${id}`)
     };
 
     const handleRemoveProntuario = async (id: number) => {

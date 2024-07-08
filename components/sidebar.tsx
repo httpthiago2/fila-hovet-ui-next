@@ -16,7 +16,7 @@ function Sidebar() {
         { title: 'Gerenciar Salas', icon: <BsFillHouseDoorFill />, route: '/sala' },
         { title: 'Gerenciar Filas', icon: <PiTelevisionSimple />, route: '/fila' },
         { title: 'Gerenciar Médicos', icon: <FaUserDoctor />, route: '/medico' },
-        { title: 'Gerenciar Prontuários', icon: <MdPets />, route: '/prontuario' },
+        { title: 'Gerenciar Senhas', icon: <MdPets />, route: '/senha' },
     ];
 
     return (
