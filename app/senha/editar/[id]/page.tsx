@@ -94,7 +94,7 @@ const EditProntuario = ({
                 description: 'O prontuário foi atualizado com sucesso!'
             })
 
-            router.push('/prontuario');
+            router.push('/senha');
             
         }).catch(erro => {
             toast({
