@@ -61,7 +61,6 @@ function FilaPage() {
         <div className="">
             <h1 className="text-3xl font-bold">Gerenciar Filas</h1>
             <Button onClick={handleNovaFila} className="w-[200px] mt-6 bg-green-500 text-white  hover:bg-green-600 hover:text-white" variant="outline">Nova fila</Button>
-
             <QueueTable columns={columns} data={filas}/>
 
         </div>
