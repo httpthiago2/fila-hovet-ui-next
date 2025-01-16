@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCaption, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { MdEdit } from "react-icons/md";
-import { FaTrashCan } from "react-icons/fa6";
+import { FaHand, FaTrashCan } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 import { PiTelevisionSimple } from "react-icons/pi";
 import { useRouter } from "next/navigation";
@@ -54,6 +54,10 @@ const QueueTable = ({ columns, data }: { columns: Column[]; data: FilaProps[] })
         push(`/fila/editar/${id}`)
     };
 
+    const handleManipularQueue = (id: number) => {
+        push(`/fila/manipular/${id}`)
+    };
+
     const handleRemoveQueue = async (id: number) => {
         queueService.remove(id).then(resposta => {
             toast({
@@ -67,6 +71,10 @@ const QueueTable = ({ columns, data }: { columns: Column[]; data: FilaProps[] })
                 description: 'Ocorreu um erro ao remover a fila'
             })
         })
+    };
+
+    const handleMonitorarFila = (id: number) => {
+        push(`/fila/monitorar/${id}`)
     };
 
     return (
@@ -92,7 +100,8 @@ const QueueTable = ({ columns, data }: { columns: Column[]; data: FilaProps[] })
                         <TableCell className="flex flex-row gap-3">
                             <MdEdit onClick={() => handleEditQueue(id)} title="Editar" className="text-3xl rounded-md p-1 text-blue-600 cursor-pointer duration-300 hover:bg-gray-300 " />
                             <FaEye onClick={() => handleVisualizeQueue(id)} title="Visualizar" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />
-                            <PiTelevisionSimple title="Monitorar" className="text-3xl rounded-md p-1 text-sysfila-green cursor-pointer duration-300 hover:bg-gray-300" />
+                            <FaHand onClick={() => handleManipularQueue(id)} title="Manipular" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />
+                            <PiTelevisionSimple onClick={() => handleMonitorarFila(id)} title="Monitorar" className="text-3xl rounded-md p-1 text-sysfila-green cursor-pointer duration-300 hover:bg-gray-300" />
 
 
                             <AlertDialog>

@@ -3,12 +3,12 @@ import { axiosInstance } from "./axiosConfig";
 export class FilaService {
 
 
-    chamarProximo() {
-        return axiosInstance.post("http://localhost:8080/fila/chamar-proximo/1");
+    chamarProximo(id: string) {
+        return axiosInstance.post(`http://localhost:8080/fila/chamar-proximo/${id}`);
     }
 
-    visualizarFila() {
-        return axiosInstance.get('fila/visualizar/1');
+    visualizarFila(id: string) {
+        return axiosInstance.get(`/fila/visualizar/${id}`);
     }
 
     findAll() {
