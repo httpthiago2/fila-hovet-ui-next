@@ -18,7 +18,7 @@ export class MedicalRecordService {
         return axiosInstance.post(`/senha`, dados);
     }
 
-    update(id: number, dados: any) {
+    update(id: string, dados: any) {
         return axiosInstance.put(`/senha/${id}`, dados);
     }
 

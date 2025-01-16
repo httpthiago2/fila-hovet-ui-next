@@ -99,9 +99,6 @@ const ProntuarioTable = ({ columns, data }: { columns: Column[]; data: MedicalRe
                         <TableCell className="flex flex-row gap-3">
                             <MdEdit onClick={() => handleEditProntuario(id)} title="Editar" className="text-3xl rounded-md p-1 text-blue-600 cursor-pointer duration-300 hover:bg-gray-300 " />
                             <FaEye onClick={() => handleVisualizeProntuario(id)} title="Visualizar" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />
-                            <PiTelevisionSimple title="Monitorar" className="text-3xl rounded-md p-1 text-sysfila-green cursor-pointer duration-300 hover:bg-gray-300" />
-
-
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <FaTrashCan title="Apagar" className="text-3xl rounded-md p-1 text-red-600 cursor-pointer duration-300 hover:bg-gray-300" />

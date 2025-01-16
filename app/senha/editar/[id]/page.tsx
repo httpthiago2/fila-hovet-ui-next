@@ -2,12 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { MedicalRecordService } from "@/service/medicalRecordService";
-import { useEffect, useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import {
     Select,
@@ -15,42 +14,47 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { RoomService } from "@/service/roomService";
+} from "@/components/ui/select";
 
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { UserService } from "@/service/userService";
-import { QueueService } from "@/service/queueService";
+    FormMessage
+} from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
+import { QueueService } from "@/service/queueService";
 import { useRouter } from "next/navigation";
 
 
 
 type FilaProps = {
     id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    doctorName: string
-    room: Room
-    queueCode: string
+    nome: string
+}
+
+type MedicalRecordProps = {
+    id: number
+    codigo: string,
+    nomePet: string
+    nomeTutor: string,
+    nomeFila: string,
+    tipoSenha: 'REGULAR' | 'PRIORIDADE',
+    situacao: 'PENDENTE_ATENDIMENTO' | 'ATENDIDA' | 'ENCAMINHADA',
+    ordem: number,
+    fila: FilaProps
 }
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 type User = {
     id: number,
-    name: string,
+    nome: string,
 }
 
 
@@ -61,86 +65,78 @@ const EditProntuario = ({
 }) => {
     const queueService = new QueueService();
     const medicalRecordService = new MedicalRecordService();
-    
+
     const router = useRouter();
     const { toast } = useToast();
 
     const formSchema = z.object({
-        id: z.number(),
-        petName: z.string(),
+        pet: z.string(),
         tutor: z.string(),
-        weight: z.string(),
-        registerDate: z.string(),
-        complaint: z.string(),
-        species: z.enum(['FELINE', 'CANINE']),
-        gender: z.enum(['MALE', 'FEMALE']),
-        queue: z.object({
-            id: z.number()
+        tipo: z.enum(['REGULAR', 'PRIORIDADE']),
+        fila: z.object({
+            id: z.number(),
+            nome: z.string()
         })
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-        }
     })
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        medicalRecordService.update(values.id, values)
-        .then(resposta => {
-            const filaCriada = resposta.data
-            toast({
-                title: 'Sucesso',
-                description: 'O prontuário foi atualizado com sucesso!'
-            })
+        medicalRecordService.update(params.id, values)
+            .then(resposta => {
+                const filaCriada = resposta.data
+                toast({
+                    title: 'Sucesso',
+                    description: 'O prontuário foi atualizado com sucesso!'
+                })
 
-            router.push('/senha');
-            
-        }).catch(erro => {
-            toast({
-                title: 'Erro!',
-                description: 'Ocorreu um erro ao atualizar prontuário'
+                router.push('/senha');
+
+            }).catch(erro => {
+                toast({
+                    title: 'Erro!',
+                    description: 'Ocorreu um erro ao atualizar prontuário'
+                })
             })
-        })
         console.log(values);
     }
 
 
 
-    
 
-    const [queues, setQueues] = useState<Room[]>([]);
+
+    const [queues, setQueues] = useState<FilaProps[]>([]);
     // const [fila, setFila] = useState<z.infer<typeof formSchema>[]>([]);
 
 
     useEffect(() => {
-
         medicalRecordService.findById(params.id).then(retorno => {
-            const prontuario = retorno.data.data
-            form.setValue("id", prontuario.id);
-            form.setValue("petName", prontuario.petName);
-            form.setValue("tutor", prontuario.tutor);
-            form.setValue("weight", prontuario.weight.toString());
-            form.setValue("complaint", prontuario.complaint);
-            form.setValue("registerDate", prontuario.registerDate)
-            form.setValue("species", prontuario.species);
-            form.setValue("gender", prontuario.gender);
-            form.setValue("queue", prontuario.queue);
+            const prontuario = retorno.data
+            console.log(prontuario.fila)
+            form.reset({
+                pet: prontuario.nomePet,
+                tutor: prontuario.nomeTutor,
+                tipo: prontuario.tipoSenha,
+                fila: prontuario.fila,
+            });
         }).catch(erro => {
             console.log(erro.data);
         })
 
-       
-        queueService.findByStatus('OPEN').then(response => {
-            setQueues(response.data.data);
+
+        queueService.findByStatus('ABERTA').then(response => {
+            setQueues(response.data);
         }).catch(err => {
             console.log(err);
         })
     }, [])
 
     const handleFieldQueueValue = (value: string) => {
+        console.log(value);
         const parsedObject = JSON.parse(value);
-        form.setValue("queue", parsedObject)
+        form.setValue("fila", parsedObject)
     }
 
     return (
@@ -151,9 +147,9 @@ const EditProntuario = ({
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
+                        <FormField
                             control={form.control}
-                            name="petName"
+                            name="pet"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome do PET</FormLabel>
@@ -177,90 +173,48 @@ const EditProntuario = ({
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="weight"
+                            name="tipo"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Peso</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="complaint"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Queixa</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="species"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Espécie</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormLabel>Tipo da senha</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Defina o status da fila" />
+                                                <SelectValue placeholder="Selecione o tipo da senha..." />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="FELINE">FELINO</SelectItem>
-                                            <SelectItem value="CANINE">CANINO</SelectItem>
+                                            <SelectItem value="REGULAR">Regular</SelectItem>
+                                            <SelectItem value="PRIORIDADE">Prioridade</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="gender"
+                            name="fila"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Sexo</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Escolha o sexo" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="MALE">Masculino</SelectItem>
-                                            <SelectItem value="FEMALE">Feminino</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="queue"
-                            render={({ field }) => (
+
                                 <FormItem>
                                     <FormLabel>Fila</FormLabel>
-                                    <Select onValueChange={handleFieldQueueValue}>
+                                    <Select onValueChange={handleFieldQueueValue} value={JSON.stringify(field.value)}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecione a sala..." />
+                                                <SelectValue placeholder="Selecione uma sala">
+                                                    {field.value?.nome}
+                                                </SelectValue>
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {queues.map(queue => (
+                                            {queues.map(room => (
 
-                                                <SelectItem key={queue.id} value={JSON.stringify(queue)}>{queue.name}</SelectItem>
+                                                <SelectItem key={room.id} value={JSON.stringify(room)}>{room.nome}</SelectItem>
                                             ))}
 
                                         </SelectContent>
