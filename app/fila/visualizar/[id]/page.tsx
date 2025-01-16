@@ -10,7 +10,7 @@ import MedicalRecordTable from "./_recordTable";
 
 
 type FilaProps = {
-    id: number
+    id: number,
     nome: string
     codigo: string
     situacao: 'ABERTA' | 'FECHADA'
@@ -31,15 +31,12 @@ type Room = {
 
 type MedicalRecordProps = {
     id: number;
-    petName: string;
-    tutor: string;
-    weight: number;
-    registerDate: string;
-    complaint: string;
-    species: string;
-    gender: 'MALE' | 'FEMALE'
-    attendanceOrder: 1;
-    medicalRecordStatus: 'ATTENDED' | 'PENDING'
+    nomePet: string;
+    nomeTutor: string;
+    tipoSenha: string;
+    situacao: 'PENDENTE_ATENDIMENTO' | 'ATENDIDA' | 'ENCAMINHADA'
+    dataCriacao: string;
+    codigo: string;
 };
 
 
@@ -58,13 +55,11 @@ const QueueVisualize = ({
 
     const medicalRecordColumns = [
         { name: 'ID' },
-        { name: 'Nome do PET' },
         { name: 'Tutor' },
-        { name: 'Peso' },
+        { name: 'Nome do PET' },
+        { name: 'Tipo Senha' },
+        { name: 'Situação' },
         { name: 'Data Registro' },
-        { name: 'Queixa' },
-        { name: 'Espécie' },
-        { name: 'Sexo' },
     ];
 
     const [medicalRecords, setMedicalRecords] = useState<MedicalRecordProps[]>([]);
@@ -92,6 +87,7 @@ const QueueVisualize = ({
         })
 
         const dataAtual = new Date().toISOString().split("T")[0];
+        console.log("data atual: ", dataAtual);
 
         medicalRecordService.findByDate(dataAtual, params.id)
             .then(retorno => {
@@ -111,27 +107,27 @@ const QueueVisualize = ({
 
                 <div className="mb-2">
                     <Label>Nome</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.nome} />
+                    <Input className="mt-2" disabled={true} value={fila?.nome || ''} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Status</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.situacao} />
+                    <Input className="mt-2" disabled={true} value={fila?.situacao || ''} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Médico</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.usuario.nome} />
+                    <Input className="mt-2" disabled={true} value={fila?.usuario.nome || ''} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Sala</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.sala.nome} />
+                    <Input className="mt-2" disabled={true} value={fila?.sala.nome || ''} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Código</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.codigo} />
+                    <Input className="mt-2" disabled={true} value={fila?.codigo || ''} />
                 </div>
             </div>
 
@@ -146,7 +142,7 @@ const QueueVisualize = ({
                         className="rounded-md border"
                     />
 
-                    <MedicalRecordTable columns={medicalRecordColumns} data={medicalRecords} />
+                    <MedicalRecordTable columns={medicalRecordColumns} data={medicalRecords || []} />
                 </div>
 
             </div>

@@ -2,26 +2,27 @@ import { axiosInstance } from "./axiosConfig";
 
 export class MedicalRecordService {
     findByDate(date: string, filaId: string) {
-        return axiosInstance.get(`/medical-record/find-by-data?data=${date}&filaId=${filaId}`)
+        console.log(date, filaId);
+        return axiosInstance.get(`/senha/find-by-data?data=${date}&filaId=${filaId}`)
     }
 
     findAll() {
-        return axiosInstance.get("/medical-record");
+        return axiosInstance.get("/senha");
     }
 
     findById(id: string) {
-        return axiosInstance.get(`/medical-record/${id}`)
+        return axiosInstance.get(`/senha/${id}`)
     }
 
     create(dados: any) {
-        return axiosInstance.post(`/medical-record`, dados);
+        return axiosInstance.post(`/senha`, dados);
     }
 
     update(id: number, dados: any) {
-        return axiosInstance.put(`/medical-record/${id}`, dados);
+        return axiosInstance.put(`/senha/${id}`, dados);
     }
 
     delete(id: number) {
-        return axiosInstance.delete(`/medical-record/${id}`);
+        return axiosInstance.delete(`/senha/${id}`);
     }
 }

@@ -7,15 +7,12 @@ type Column = {
 
 type MedicalRecordProps = {
     id: number;
-    petName: string;
-    tutor: string;
-    weight: number;
-    registerDate: string;
-    complaint: string;
-    species: string;
-    gender: 'MALE' | 'FEMALE'
-    attendanceOrder: number;
-    medicalRecordStatus: 'ATTENDED' | 'PENDING'
+    nomePet: string;
+    nomeTutor: string;
+    tipoSenha: string;
+    situacao: 'PENDENTE_ATENDIMENTO' | 'ATENDIDA' | 'ENCAMINHADA'
+    dataCriacao: string;
+    codigo: string;
 };
 
 const MedicalRecordTable = ({ columns, data }: { columns: Column[]; data: MedicalRecordProps[] }) => {
@@ -33,15 +30,13 @@ const MedicalRecordTable = ({ columns, data }: { columns: Column[]; data: Medica
             </TableHeader>
             <TableBody>
                 {data.map((prontuario) => (
-                    <TableRow key={prontuario.id}>
-                        <TableCell>{prontuario.id}</TableCell>
-                        <TableCell>{prontuario.petName}</TableCell>
-                        <TableCell>{prontuario.tutor}</TableCell>
-                        <TableCell>{prontuario.weight}</TableCell>
-                        <TableCell>{prontuario.registerDate}</TableCell>
-                        <TableCell>{prontuario.complaint}</TableCell>
-                        <TableCell>{prontuario.species === 'FELINE' ? 'FELINO' : 'CANINO'}</TableCell>
-                        <TableCell>{prontuario.gender === 'MALE' ? 'MACHO' : 'FEMEA'}</TableCell>
+                    <TableRow key={prontuario.codigo}>
+                        <TableCell>{prontuario.codigo}</TableCell>
+                        <TableCell>{prontuario.nomeTutor}</TableCell>
+                        <TableCell>{prontuario.nomePet}</TableCell>
+                        <TableCell>{prontuario.tipoSenha}</TableCell>
+                        <TableCell>{prontuario.situacao}</TableCell>
+                        <TableCell>{prontuario.dataCriacao}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
