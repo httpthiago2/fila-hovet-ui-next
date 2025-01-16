@@ -63,6 +63,18 @@ function FilaMonitoramentoPage({
 
 
     useEffect(() => {
+
+        const socket = new SockJS('http://localhost:8080/ws');
+        const stompClient = Stomp.over(socket);
+    
+        stompClient.connect({}, (frame: any) => {
+            console.log('Connected: ' + frame);
+    
+            stompClient.subscribe(`/topic/fila/${params.id}`, (message) => {
+                setFila(JSON.parse(message.body));
+            });
+        });
+
         filaService.visualizarFila(params.id).then(retorno => {
             console.log(retorno);
             setFila(retorno.data as any);
@@ -70,18 +82,17 @@ function FilaMonitoramentoPage({
             console.log(erro);
         });
 
-    }, []);
+        return () => {
+            if (stompClient && stompClient.connected) {
+                stompClient.disconnect(() => {
+                    console.log('Disconnected from WebSocket');
+                });
+            }
+        };
 
-    const socket = new SockJS('http://localhost:8080/ws');
-    const stompClient = Stomp.over(socket);
+    }, [params.id]);
 
-    stompClient.connect({}, (frame: any) => {
-        console.log('Connected: ' + frame);
-
-        stompClient.subscribe(`/topic/fila/${params.id}`, (message) => {
-            setFila(JSON.parse(message.body));
-        });
-    });
+    
 
     setInterval(() => {
         setDataAtual(new Date);
