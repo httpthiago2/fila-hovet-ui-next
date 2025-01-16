@@ -3,17 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { RoomService } from "@/service/roomService";
 
 import {
@@ -25,14 +18,12 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { QueueService } from "@/service/queueService";
-import { UserService } from "@/service/userService";
 import { useRouter } from "next/navigation";
 
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 const EditSala = ({
@@ -46,13 +37,13 @@ const EditSala = ({
 
     const formSchema = z.object({
         id: z.number(),
-        name: z.string(),
+        nome: z.string(),
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
+            nome: "",
         }
     })
 
@@ -80,9 +71,11 @@ const EditSala = ({
     useEffect(() => {
 
         roomService.findById(params.id).then(retorno => {
-            const fila = retorno.data.data
-            form.setValue("id", fila.id);
-            form.setValue("name", fila.name);
+            const fila = retorno.data
+            form.reset({
+                id: fila.id,
+                nome: fila.nome
+            })
         }).catch(erro => {
             console.log(erro.data);
         })
@@ -98,7 +91,7 @@ const EditSala = ({
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome</FormLabel>

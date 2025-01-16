@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 
@@ -32,13 +32,13 @@ const CreateSala = () => {
     const { toast } = useToast();
 
     const formSchema = z.object({
-        name: z.string(),
+        nome: z.string(),
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: ""
+            nome: ""
         }
     })
 
@@ -72,7 +72,7 @@ const CreateSala = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome</FormLabel>

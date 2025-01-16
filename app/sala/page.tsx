@@ -4,7 +4,7 @@
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 import { Button } from "@/components/ui/button"
@@ -36,7 +36,7 @@ function RoomPage() {
 
     useEffect(() => {
         roomService.findAll().then(retorno => {
-            setRooms(retorno.data.data as any);
+            setRooms(retorno.data as any);
         }).catch(erro => {
             console.log(erro);
         });

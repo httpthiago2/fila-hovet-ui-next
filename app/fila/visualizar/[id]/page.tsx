@@ -11,22 +11,22 @@ import MedicalRecordTable from "./_recordTable";
 
 type FilaProps = {
     id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    doctor: User
-    room: Room
-    medicalRecords: []
-    queueCode: string
+    nome: string
+    codigo: string
+    situacao: 'ABERTA' | 'FECHADA'
+    usuario: User
+    sala: Room
+    senhas: []
 }
 
 type User = {
     id: number,
-    name: string,
+    nome: string,
 }
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 type MedicalRecordProps = {
@@ -85,7 +85,8 @@ const QueueVisualize = ({
 
     useEffect(() => {
         queueService.findById(params.id).then(retorno => {
-            setFila(retorno.data.data);
+            console.log(retorno.data)
+            setFila(retorno.data);
         }).catch(erro => {
             console.log(erro.data);
         })
@@ -110,27 +111,27 @@ const QueueVisualize = ({
 
                 <div className="mb-2">
                     <Label>Nome</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.name} />
+                    <Input className="mt-2" disabled={true} value={fila?.nome} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Status</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.queueStatus} />
+                    <Input className="mt-2" disabled={true} value={fila?.situacao} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Médico</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.doctor.name} />
+                    <Input className="mt-2" disabled={true} value={fila?.usuario.nome} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Sala</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.room.name} />
+                    <Input className="mt-2" disabled={true} value={fila?.sala.nome} />
                 </div>
 
                 <div className="mb-2">
                     <Label>Código</Label>
-                    <Input className="mt-2" disabled={true} value={fila?.queueCode} />
+                    <Input className="mt-2" disabled={true} value={fila?.codigo} />
                 </div>
             </div>
 

@@ -2,18 +2,17 @@
 
 type User = {
     id: number,
-    name: string,
-    userName: string,
-    profileTypeEnum: 'DOCTOR' | 'SECRETARY' | 'DIRECTOR'
+    nome: string,
+    usuario: string,
+    perfil: 'MEDICO' | 'SECRETARIO' | 'DIRETOR'
 }
 
 import { Button } from "@/components/ui/button"
 
-import { RoomService } from "@/service/roomService"
+import { UserService } from "@/service/userService"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import SalaTable from "./_table"
-import { UserService } from "@/service/userService"
 
 
 function UsuarioPage() {
@@ -30,13 +29,13 @@ function UsuarioPage() {
     const userService = new UserService();
 
     const handleNovaSala = () => {
-        router.push('/medico/novo');
+        router.push('/usuario/novo');
     }
 
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        userService.findByTipoPerfil("DOCTOR").then(retorno => {
+        userService.findAll().then(retorno => {
             setUsers(retorno.data as any);
         }).catch(erro => {
             console.log(erro);

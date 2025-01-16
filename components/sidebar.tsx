@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { BsArrowLeftShort } from "react-icons/bs";
-import { FaUserDoctor } from "react-icons/fa6";
+import { FaUser, FaUserDoctor } from "react-icons/fa6";
 import { MdPets } from "react-icons/md";
 import { PiTelevisionSimple } from "react-icons/pi";
 import { BsFillHouseDoorFill } from "react-icons/bs";
@@ -15,7 +15,7 @@ function Sidebar() {
     const menuItems = [
         { title: 'Gerenciar Salas', icon: <BsFillHouseDoorFill />, route: '/sala' },
         { title: 'Gerenciar Filas', icon: <PiTelevisionSimple />, route: '/fila' },
-        { title: 'Gerenciar Médicos', icon: <FaUserDoctor />, route: '/medico' },
+        { title: 'Gerenciar Usuários', icon: <FaUser />, route: '/usuario' },
         { title: 'Gerenciar Senhas', icon: <MdPets />, route: '/senha' },
     ];
 

@@ -25,17 +25,17 @@ type Column = {
 
 type FilaProps = {
     id: number;
-    name: string;
-    queueStatus: 'OPEN' | 'CLOSED';
-    doctor: User;
-    room: { id: number; name: string };
-    medicalRecords: any[];
-    queueCode: string;
+    nome: string;
+    situacao: 'ABERTA' | 'FECHADA';
+    usuario: User;
+    sala: { id: number; nome: string };
+    senhas: any[];
+    codigo: string;
 };
 
 type User = {
     id: number,
-    name: string,
+    nome: string,
 }
 
 const QueueTable = ({ columns, data }: { columns: Column[]; data: FilaProps[] }) => {
@@ -81,14 +81,14 @@ const QueueTable = ({ columns, data }: { columns: Column[]; data: FilaProps[] })
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data.map(({ id, queueCode, name, queueStatus, doctor, room }) => (
+                {data.map(({ id, codigo, nome, situacao, usuario, sala }) => (
                     <TableRow key={id}>
                         <TableCell>{id}</TableCell>
-                        <TableCell>{queueCode}</TableCell>
-                        <TableCell>{name}</TableCell>
-                        <TableCell>{queueStatus === 'OPEN' ? 'ABERTA' : 'FECHADA'}</TableCell>
-                        <TableCell>{doctor.name}</TableCell>
-                        <TableCell>{room.name}</TableCell>
+                        <TableCell>{codigo}</TableCell>
+                        <TableCell>{nome}</TableCell>
+                        <TableCell>{situacao}</TableCell>
+                        <TableCell>{usuario.nome}</TableCell>
+                        <TableCell>{sala.nome}</TableCell>
                         <TableCell className="flex flex-row gap-3">
                             <MdEdit onClick={() => handleEditQueue(id)} title="Editar" className="text-3xl rounded-md p-1 text-blue-600 cursor-pointer duration-300 hover:bg-gray-300 " />
                             <FaEye onClick={() => handleVisualizeQueue(id)} title="Visualizar" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />

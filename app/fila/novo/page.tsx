@@ -45,12 +45,12 @@ type FilaProps = {
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 type User = {
     id: number,
-    name: string,
+    nome: string,
 }
 
 
@@ -62,23 +62,25 @@ const CreateQueue = () => {
     const { toast } = useToast();
 
     const formSchema = z.object({
-        name: z.string(),
-        queueStatus: z.enum(['OPEN', 'CLOSED']),
-        room: z.object({
-            id: z.number()
+        nome: z.string(),
+        situacao: z.enum(['ABERTA', 'FECHADA']),
+        sala: z.object({
+            id: z.number(),
+            nome: z.string()
         }),
-        doctor: z.object({
-            id: z.number()
+        usuario: z.object({
+            id: z.number(),
+            nome: z.string()
         }),
-        queueCode: z.string()
+        codigo: z.string()
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            queueStatus: "OPEN",
-            queueCode: ""
+            nome: "",
+            situacao: "ABERTA",
+            codigo: ""
         }
     })
 
@@ -112,12 +114,13 @@ const CreateQueue = () => {
 
     useEffect(() => {
         roomService.findAll().then(response => {
-            setRooms(response.data.data);
+            console.log(response.data);
+            setRooms(response.data);
         }).catch(err => {
             console.log(err);
         })
 
-        userService.findByTipoPerfil("DOCTOR").then(response => {
+        userService.findByTipoPerfil("MEDICO").then(response => {
             setDoctors(response.data);
         }).catch(err => {
             console.log(err);
@@ -126,12 +129,12 @@ const CreateQueue = () => {
 
     const handleFieldRoomValue = (value: string) => {
         const parsedObject = JSON.parse(value);
-        form.setValue("room", parsedObject)
+        form.setValue("sala", parsedObject)
     }
 
     const handleFieldDoctorValue = (value: string) => {
         const parsedObject = JSON.parse(value);
-        form.setValue("doctor", parsedObject)
+        form.setValue("usuario", parsedObject)
     }
 
     return (
@@ -144,7 +147,7 @@ const CreateQueue = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome</FormLabel>
@@ -157,7 +160,7 @@ const CreateQueue = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="queueStatus"
+                            name="situacao"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Status</FormLabel>
@@ -168,8 +171,8 @@ const CreateQueue = () => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="OPEN">ABERTA</SelectItem>
-                                            <SelectItem value="CLOSED">FECHADA</SelectItem>
+                                            <SelectItem value="ABERTA">ABERTA</SelectItem>
+                                            <SelectItem value="FECHADA">FECHADA</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -178,7 +181,7 @@ const CreateQueue = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="room"
+                            name="sala"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Sala</FormLabel>
@@ -191,7 +194,7 @@ const CreateQueue = () => {
                                         <SelectContent>
                                             {rooms.map(room => (
 
-                                                <SelectItem key={room.id} value={JSON.stringify(room)}>{room.name}</SelectItem>
+                                                <SelectItem key={room.id} value={JSON.stringify(room)}>{room.nome}</SelectItem>
                                             ))}
 
                                         </SelectContent>
@@ -202,7 +205,7 @@ const CreateQueue = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="doctor"
+                            name="usuario"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Médico</FormLabel>
@@ -215,7 +218,7 @@ const CreateQueue = () => {
                                         <SelectContent>
                                             {doctors.map(doctor => (
 
-                                                <SelectItem key={doctor.id} value={JSON.stringify(doctor)}>{doctor.name}</SelectItem>
+                                                <SelectItem key={doctor.id} value={JSON.stringify(doctor)}>{doctor.nome}</SelectItem>
                                             ))}
 
                                         </SelectContent>
@@ -226,7 +229,7 @@ const CreateQueue = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="queueCode"
+                            name="codigo"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Código</FormLabel>

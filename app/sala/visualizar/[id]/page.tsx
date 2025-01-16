@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 
@@ -27,7 +27,7 @@ const SalaVisualize = ({
     
     useEffect(() => {
         roomService.findById(params.id).then(retorno => {
-            setSala(retorno.data.data);
+            setSala(retorno.data);
         }).catch(erro => {
             console.log(erro.data);
         })
@@ -43,7 +43,7 @@ const SalaVisualize = ({
 
                 <div className="mb-2">
                     <Label>Nome</Label>
-                    <Input className="mt-2" disabled={true} value={sala?.name} />
+                    <Input className="mt-2" disabled={true} value={sala?.nome} />
                 </div>
 
             </div>

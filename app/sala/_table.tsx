@@ -26,7 +26,7 @@ type Column = {
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 const SalaTable = ({ columns, data }: { columns: Column[]; data: Room[] }) => {
@@ -72,10 +72,10 @@ const SalaTable = ({ columns, data }: { columns: Column[]; data: Room[] }) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data.map(({ id, name }) => (
+                {data.map(({ id, nome }) => (
                     <TableRow key={id}>
                         <TableCell>{id}</TableCell>
-                        <TableCell>{name}</TableCell>
+                        <TableCell>{nome}</TableCell>
                         <TableCell className="flex flex-row gap-3">
                             <MdEdit onClick={() => handleEditSala(id)} title="Editar" className="text-3xl rounded-md p-1 text-blue-600 cursor-pointer duration-300 hover:bg-gray-300 " />
                             <FaEye onClick={() => handleVisualizeSala(id)} title="Visualizar" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />

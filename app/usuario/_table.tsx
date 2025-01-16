@@ -25,9 +25,9 @@ type Column = {
 
 type User = {
     id: number,
-    name: string,
-    userName: string,
-    profileTypeEnum: 'DOCTOR' | 'SECRETARY' | 'DIRECTOR'
+    nome: string,
+    usuario: string,
+    perfil: 'MEDICO' | 'SECRETARIO' | 'DIRETOR'
 }
 
 
@@ -74,12 +74,12 @@ const UserTable = ({ columns, data }: { columns: Column[]; data: User[] }) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data.map(({ id, name, userName, profileTypeEnum }) => (
+                {data.map(({ id, nome, usuario, perfil }) => (
                     <TableRow key={id}>
                         <TableCell>{id}</TableCell>
-                        <TableCell>{name}</TableCell>
-                        <TableCell>{userName}</TableCell>
-                        <TableCell>{profileTypeEnum}</TableCell>
+                        <TableCell>{nome}</TableCell>
+                        <TableCell>{usuario}</TableCell>
+                        <TableCell>{perfil}</TableCell>
                         <TableCell className="flex flex-row gap-3">
                             <MdEdit onClick={() => handleEditUser(id)} title="Editar" className="text-3xl rounded-md p-1 text-blue-600 cursor-pointer duration-300 hover:bg-gray-300 " />
                             <FaEye onClick={() => handleVisualizeUser(id)} title="Visualizar" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />

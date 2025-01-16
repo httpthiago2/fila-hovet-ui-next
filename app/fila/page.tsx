@@ -2,22 +2,22 @@
 
 type FilaProps = {
     id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    doctor: User
-    room: Room
-    medicalRecords: []
-    queueCode: string
+    nome: string
+    codigo: string
+    situacao: 'ABERTA' | 'FECHADA'
+    usuario: User
+    sala: Room
+    senhas: []
 }
 
 type User = {
     id: number,
-    name: string,
+    nome: string,
 }
 
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 import { Button } from "@/components/ui/button"
@@ -51,7 +51,7 @@ function FilaPage() {
 
     useEffect(() => {
         queueService.findAll().then(retorno => {
-            setFilas(retorno.data.data as any);
+            setFilas(retorno.data as any);
         }).catch(erro => {
             console.log(erro);
         });

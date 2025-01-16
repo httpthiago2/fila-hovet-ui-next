@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { RoomService } from "@/service/roomService";
 
 import {
     Form,
@@ -16,9 +15,10 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 import { UserService } from "@/service/userService";
+import { useRouter } from "next/navigation";
 
 
 
@@ -28,19 +28,19 @@ const CreateUser = () => {
     const { toast } = useToast();
 
     const formSchema = z.object({
-        name: z.string(),
-        userName: z.string(),
-        password: z.string(),
-        profileTypeEnum: z.enum(['DOCTOR', 'SECRETARY', 'DIRECTOR']),
+        nome: z.string(),
+        usuario: z.string(),
+        senha: z.string(),
+        perfil: z.enum(['MEDICO', 'SECRETARIO', 'DIRETOR']),
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            userName: "",
-            password: "",
-            profileTypeEnum: "DOCTOR"
+            nome: "",
+            usuario: "",
+            senha: "",
+            perfil: "MEDICO"
         }
     })
 
@@ -53,7 +53,7 @@ const CreateUser = () => {
                 description: userCriado.message
             })
 
-            router.push('/medico');
+            router.push('/usuario');
             
         }).catch(erro => {
             toast({
@@ -74,7 +74,7 @@ const CreateUser = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome</FormLabel>
@@ -87,7 +87,7 @@ const CreateUser = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="userName"
+                            name="usuario"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Usuário</FormLabel>
@@ -100,13 +100,35 @@ const CreateUser = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="senha"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Senha</FormLabel>
                                     <FormControl>
                                         <Input type="password" placeholder="" {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="perfil"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Perfil</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Defina o perfil do usuário" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="MEDICO">MEDICO</SelectItem>
+                                            <SelectItem value="SECRETARIO">SECRETARIO</SelectItem>
+                                            <SelectItem value="DIRETOR">DIRETOR</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}

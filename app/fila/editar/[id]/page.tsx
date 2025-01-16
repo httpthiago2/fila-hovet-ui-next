@@ -33,24 +33,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
 
-
-type FilaProps = {
-    id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    doctorName: string
-    room: Room
-    queueCode: string
-}
-
 type Room = {
     id: number
-    name: string
+    nome: string
 }
 
 type User = {
     id: number,
-    name: string,
+    nome: string,
 }
 
 
@@ -67,22 +57,24 @@ const EditQueue = ({
 
     const formSchema = z.object({
         id: z.number(),
-        name: z.string(),
-        queueStatus: z.enum(['OPEN', 'CLOSED']),
-        room: z.object({
-            id: z.number()
+        nome: z.string(),
+        situacao: z.enum(['ABERTA', 'FECHADA']),
+        sala: z.object({
+            id: z.number(),
+            nome: z.string()
         }),
-        doctor: z.object({
-            id: z.number()
+        usuario: z.object({
+            id: z.number(),
+            nome: z.string()
         }),
-        queueCode: z.string()
+        codigo: z.string()
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            queueCode: ""
+            nome: "",
+            codigo: ""
         }
     })
 
@@ -118,24 +110,28 @@ const EditQueue = ({
     useEffect(() => {
 
         queueService.findById(params.id).then(retorno => {
-            const fila = retorno.data.data
-            form.setValue("id", fila.id);
-            form.setValue("name", fila.name);
-            form.setValue("queueStatus", fila.queueStatus);
-            form.setValue("doctor", fila.doctor);
-            form.setValue("room", fila.room);
-            form.setValue("queueCode", fila.queueCode);
+            const fila = retorno.data
+            console.log(fila);
+            form.reset({
+                id: fila.id,
+                nome: fila.nome,
+                situacao: fila.situacao,
+                usuario: fila.usuario,
+                sala: fila.sala,
+                codigo: fila.codigo
+            });
+            console.log("FORM: ", form);
         }).catch(erro => {
             console.log(erro.data);
         })
 
         roomService.findAll().then(response => {
-            setRooms(response.data.data);
+            setRooms(response.data);
         }).catch(err => {
             console.log(err);
         })
 
-        userService.findByTipoPerfil("DOCTOR").then(response => {
+        userService.findByTipoPerfil("MEDICO").then(response => {
             setDoctors(response.data);
         }).catch(err => {
             console.log(err);
@@ -144,17 +140,17 @@ const EditQueue = ({
 
     const handleFieldRoomValue = (value: string) => {
         const parsedObject = JSON.parse(value);
-        form.setValue("room", parsedObject)
+        form.setValue("sala", parsedObject)
     }
 
     const handleFieldDoctorValue = (value: string) => {
         const parsedObject = JSON.parse(value);
-        form.setValue("doctor", parsedObject)
+        form.setValue("usuario", parsedObject)
     }
 
     return (
         <div className="overflow-auto p-2">
-            <h1 className="text-3xl">Nova fila</h1>
+            <h1 className="text-3xl">Editar fila</h1>
             <div className="mt-4 flex flex-col gap-5">
                 <h2 className="mb-2 font-bold">Dados principais</h2>
 
@@ -162,7 +158,7 @@ const EditQueue = ({
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome</FormLabel>
@@ -175,19 +171,19 @@ const EditQueue = ({
                         />
                         <FormField
                             control={form.control}
-                            name="queueStatus"
+                            name="situacao"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Status</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select value={field.value || ""} onValueChange={field.onChange}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Defina, se necessário, o novo status da fila" />
+                                                <SelectValue placeholder="Defina o status da fila"/>
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="OPEN">ABERTA</SelectItem>
-                                            <SelectItem value="CLOSED">FECHADA</SelectItem>
+                                            <SelectItem value="ABERTA">ABERTA</SelectItem>
+                                            <SelectItem value="FECHADA">FECHADA</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -196,20 +192,21 @@ const EditQueue = ({
                         />
                         <FormField
                             control={form.control}
-                            name="room"
+                            name="sala"
                             render={({ field }) => (
+                            
                                 <FormItem>
                                     <FormLabel>Sala</FormLabel>
-                                    <Select onValueChange={handleFieldRoomValue} defaultValue={JSON.stringify(field.value)}>
+                                    <Select onValueChange={handleFieldRoomValue} value={JSON.stringify(field.value)}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Defina, se necessário, a nova sala da fila" />
+                                                <SelectValue placeholder="Selecione uma sala" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
                                             {rooms.map(room => (
 
-                                                <SelectItem key={room.id} value={JSON.stringify(room)}>{room.name}</SelectItem>
+                                                <SelectItem key={room.id} value={JSON.stringify(room)}>{room.nome}</SelectItem>
                                             ))}
 
                                         </SelectContent>
@@ -220,11 +217,11 @@ const EditQueue = ({
                         />
                         <FormField
                             control={form.control}
-                            name="doctor"
+                            name="usuario"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Médico</FormLabel>
-                                    <Select onValueChange={handleFieldDoctorValue} defaultValue={JSON.stringify(field.value)}>
+                                    <Select onValueChange={handleFieldDoctorValue} value={JSON.stringify(field.value)}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Defina, se necessário, o novo médico que atenderá a fila" />
@@ -233,7 +230,7 @@ const EditQueue = ({
                                         <SelectContent>
                                             {doctors.map(doctor => (
 
-                                                <SelectItem key={doctor.id} value={JSON.stringify(doctor)}>{doctor.name}</SelectItem>
+                                                <SelectItem key={doctor.id} value={JSON.stringify(doctor)}>{doctor.nome}</SelectItem>
                                             ))}
 
                                         </SelectContent>
@@ -244,7 +241,7 @@ const EditQueue = ({
                         />
                         <FormField
                             control={form.control}
-                            name="queueCode"
+                            name="codigo"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Código</FormLabel>
