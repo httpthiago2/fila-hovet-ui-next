@@ -10,9 +10,9 @@ import { useEffect, useState } from "react";
 
 type User = {
     id: number,
-    name: string,
-    userName: string,
-    profileTypeEnum: 'DOCTOR' | 'SECRETARY' | 'DIRECTOR'
+    nome: string,
+    usuario: string,
+    perfil: 'MEDICOP' | 'SECRETARIO' | 'DIRETOR'
 }
 
 
@@ -29,7 +29,7 @@ const UserVisualize = ({
     
     useEffect(() => {
         userService.findById(params.id).then(retorno => {
-            setUser(retorno.data.data);
+            setUser(retorno.data);
         }).catch(erro => {
             console.log(erro.data);
         })
@@ -45,13 +45,13 @@ const UserVisualize = ({
 
                 <div className="mb-2">
                     <Label>Nome</Label>
-                    <Input className="mt-2" disabled={true} value={user?.name} />
+                    <Input className="mt-2" disabled={true} value={user?.nome || ''} />
 
                     <Label>Usuário</Label>
-                    <Input className="mt-2" disabled={true} value={user?.userName} />
+                    <Input className="mt-2" disabled={true} value={user?.usuario || ''} />
 
                     <Label>Perfil</Label>
-                    <Input className="mt-2" disabled={true} value={user?.profileTypeEnum} />
+                    <Input className="mt-2" disabled={true} value={user?.perfil || ''} />
                 </div>
 
             </div>

@@ -25,23 +25,23 @@ type Column = {
 
 type FilaProps = {
     id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    medicalRecords: []
-    queueCode: string
+    nome: string
+    situacao: 'ABERTA' | 'FECHADA'
+    senhas: []
+    codigo: string
 }
 
 type MedicalRecordProps = {
     id: number
-    petName: string
-    tutor: string
-    weight: number
-    registerDate: string
-    complaint: string
-    species: 'FELINE' | 'CANINE'
-    gender: 'MALE' | 'FEMALE'
-    attendanceOrder: number;
-    queue: FilaProps
+    codigo: string,
+    nomePet: string
+    nomeTutor: string,
+    nomeFila: string,
+    tipoSenha: 'REGULAR' | 'PRIORIDADE',
+    situacao: 'PENDENTE_ATENDIMENTO' | 'ATENDIDA' | 'ENCAMINHADA',
+    ordem: number,
+    dataCriacao: string,
+    fila: FilaProps
 }
 
 const ProntuarioTable = ({ columns, data }: { columns: Column[]; data: MedicalRecordProps[] }) => {
@@ -87,17 +87,15 @@ const ProntuarioTable = ({ columns, data }: { columns: Column[]; data: MedicalRe
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {data.map(({ id, petName, tutor, weight, complaint, species, gender, attendanceOrder, registerDate, queue }) => (
+                {data.map(({ id, nomePet, nomeTutor, dataCriacao, tipoSenha, nomeFila, situacao, codigo }) => (
                     <TableRow key={id}>
-                        <TableCell>{queue.queueCode + id}</TableCell>
-                        <TableCell>{petName}</TableCell>
-                        <TableCell>{tutor}</TableCell>
-                        <TableCell className="w-[100px]">{weight + 'Kg'}</TableCell>
-                        <TableCell>{new Date(registerDate).toLocaleString()}</TableCell>
-                        <TableCell>{complaint}</TableCell>
-                        <TableCell>{species === 'FELINE' ? 'Felino' : 'Canino'}</TableCell>
-                        <TableCell>{gender === 'MALE' ? 'Macho': 'Fêmea'}</TableCell>
-                        <TableCell>{queue.name}</TableCell>
+                        <TableCell>{codigo}</TableCell>
+                        <TableCell>{nomePet}</TableCell>
+                        <TableCell>{nomeTutor}</TableCell>
+                        <TableCell>{tipoSenha}</TableCell>
+                        <TableCell>{situacao}</TableCell>
+                        <TableCell>{nomeFila}</TableCell>
+                        <TableCell>{dataCriacao}</TableCell>
                         <TableCell className="flex flex-row gap-3">
                             <MdEdit onClick={() => handleEditProntuario(id)} title="Editar" className="text-3xl rounded-md p-1 text-blue-600 cursor-pointer duration-300 hover:bg-gray-300 " />
                             <FaEye onClick={() => handleVisualizeProntuario(id)} title="Visualizar" className="text-3xl rounded-md p-1  cursor-pointer duration-300 hover:bg-gray-300" />

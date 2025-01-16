@@ -2,23 +2,23 @@
 
 type FilaProps = {
     id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    medicalRecords: []
-    queueCode: string
+    nome: string
+    situacao: 'ABERTA' | 'FECHADA'
+    senhas: []
+    codigo: string
 }
 
 type MedicalRecordProps = {
     id: number
-    petName: string
-    tutor: string
-    weight: number
-    registerDate: string
-    complaint: string
-    species: 'FELINE' | 'CANINE'
-    gender: 'MALE' | 'FEMALE',
-    attendanceOrder: number,
-    queue: FilaProps
+    codigo: string,
+    nomePet: string
+    nomeTutor: string,
+    nomeFila: string,
+    tipoSenha: 'REGULAR' | 'PRIORIDADE',
+    situacao: 'PENDENTE_ATENDIMENTO' | 'ATENDIDA' | 'ENCAMINHADA',
+    ordem: number,
+    dataCriacao: string,
+    fila: FilaProps
 }
 
 import { Button } from "@/components/ui/button"
@@ -34,13 +34,10 @@ function ProntuarioPage() {
         { name: 'Código' },
         { name: 'Nome do PET' },
         { name: 'Tutor' },
-        { name: 'Peso' },
-        { name: 'Data Registro' },
-        { name: 'Queixa' },
-        { name: 'Espécie' },
-        { name: 'Sexo'},
-        { name: 'Fila'},
-        { name: 'Operações'}
+        { name: 'Tipo' },
+        { name: 'Situação' },
+        { name: 'Fila' },
+        { name: 'Data Criação' },
     ];
 
     const router = useRouter();
@@ -55,7 +52,7 @@ function ProntuarioPage() {
 
     useEffect(() => {
         medicalRecordService.findAll().then(retorno => {
-            setProntuarios(retorno.data.data as any);
+            setProntuarios(retorno.data as any);
         }).catch(erro => {
             console.log(erro);
         });

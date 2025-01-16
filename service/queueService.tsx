@@ -11,7 +11,7 @@ export class QueueService {
     }
 
     findByStatus(status: string) {
-        return axiosInstance.get(`/fila/find-by-status/${status}`)
+        return axiosInstance.get(`/fila/find-by-situacao/${status}`)
     }
 
     create(dados: any) {

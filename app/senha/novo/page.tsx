@@ -34,23 +34,23 @@ import { MedicalRecordService } from "@/service/medicalRecordService";
 
 type FilaProps = {
     id: number
-    name: string
-    queueStatus: 'OPEN' | 'CLOSED'
-    medicalRecords: []
-    queueCode: string
+    nome: string
+    situacao: 'ABERTA' | 'FECHADA'
+    senhas: []
+    codigo: string
 }
 
 type MedicalRecordProps = {
     id: number
-    petName: string
-    tutor: string
-    weight: number
-    registerDate: string
-    complaint: string
-    species: 'FELINE' | 'CANINE'
-    gender: 'MALE' | 'FEMALE',
-    attendanceOrder: number,
-    queue: FilaProps
+    codigo: string,
+    nomePet: string
+    nomeTutor: string,
+    nomeFila: string,
+    tipoSenha: 'REGULAR' | 'PRIORIDADE',
+    situacao: 'PENDENTE_ATENDIMENTO' | 'ATENDIDA' | 'ENCAMINHADA',
+    ordem: number,
+    dataCriacao: string,
+    fila: FilaProps
 }
 
 
@@ -62,23 +62,17 @@ const CreateProntuario = () => {
     const { toast } = useToast();
 
     const formSchema = z.object({
-        petName: z.string(),
+        pet: z.string(),
         tutor: z.string(),
-        weight: z.string(),
-        registerDate: z.string(),
-        complaint: z.string(),
-        species: z.enum(['FELINE', 'CANINE']),
-        gender: z.enum(['MALE', 'FEMALE']),
-        queue: z.object({
-            id: z.number()
+        tipo: z.enum(['REGULAR', 'PRIORIDADE']),
+        fila: z.object({
+            id: z.number(),
+            nome: z.string()
         })
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            registerDate: new Date().toISOString()
-        }
     })
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -109,8 +103,8 @@ const CreateProntuario = () => {
 
 
     useEffect(() => {
-        queueService.findByStatus('OPEN').then(response => {
-            setQueues(response.data.data);
+        queueService.findByStatus('ABERTA').then(response => {
+            setQueues(response.data);
         }).catch(err => {
             console.log(err);
         })
@@ -119,12 +113,12 @@ const CreateProntuario = () => {
 
     const handleFieldQueueValue = (value: string) => {
         const parsedObject = JSON.parse(value);
-        form.setValue("queue", parsedObject)
+        form.setValue("fila", parsedObject)
     }
 
     return (
         <div className="overflow-auto p-2">
-            <h1 className="text-3xl">Nova fila</h1>
+            <h1 className="text-3xl">Nova Senha</h1>
             <div className="mt-4 flex flex-col gap-5">
                 <h2 className="mb-2 font-bold">Dados principais</h2>
 
@@ -132,7 +126,7 @@ const CreateProntuario = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="petName"
+                            name="pet"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome do PET</FormLabel>
@@ -156,92 +150,46 @@ const CreateProntuario = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
+
+<FormField
                             control={form.control}
-                            name="weight"
+                            name="tipo"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Peso</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="complaint"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Queixa</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="species"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Espécie</FormLabel>
+                                    <FormLabel>Tipo da senha</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Defina o status da fila" />
+                                                <SelectValue placeholder="Selecione o tipo da senha..." />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="FELINE">FELINO</SelectItem>
-                                            <SelectItem value="CANINE">CANINO</SelectItem>
+                                            <SelectItem value="REGULAR">Regular</SelectItem>
+                                            <SelectItem value="PRIORIDADE">Prioridade</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                        
                         <FormField
                             control={form.control}
-                            name="gender"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Sexo</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Escolha o sexo" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="MALE">Masculino</SelectItem>
-                                            <SelectItem value="FEMALE">Feminino</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="queue"
+                            name="fila"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Fila</FormLabel>
                                     <Select onValueChange={handleFieldQueueValue}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecione a sala..." />
+                                                <SelectValue placeholder="Selecione a fila..." />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {queue.map(queue => (
+                                            {queue.map(fila => (
 
-                                                <SelectItem key={queue.id} value={JSON.stringify(queue)}>{queue.name}</SelectItem>
+                                                <SelectItem key={fila.id} value={JSON.stringify(fila)}>{fila.nome}</SelectItem>
                                             ))}
-
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />

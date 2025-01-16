@@ -20,13 +20,14 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { UserService } from "@/service/userService";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 type User = {
     id: number,
-    name: string,
-    userName: string,
-    profileTypeEnum: 'DOCTOR' | 'SECRETARY' | 'DIRECTOR'
+    nome: string,
+    usuario: string,
+    perfil: 'MEDICO' | 'SECRETARIO' | 'DIRETOR'
 }
 
 
@@ -41,24 +42,23 @@ const EditUser = ({
 
     const formSchema = z.object({
         id: z.number(),
-        name: z.string(),
-        userName: z.string(),
-        password: z.string(),
-        profileTypeEnum: z.enum(['DOCTOR', 'SECRETARY', 'DIRECTOR']),
+        nome: z.string(),
+        usuario: z.string(),
+        senha: z.string(),
+        perfil: z.enum(['MEDICO', 'SECRETARIO', 'DIRETOR']),
     })
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            userName: "",
-            password: "",
-            profileTypeEnum: "DOCTOR"
+            nome: "",
+            usuario: "",
+            senha: ""
         }
     })
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        userService.update(values)
+        userService.update(params.id, values)
         .then(resposta => {
             const usuarioEditado = resposta.data
             toast({
@@ -66,7 +66,7 @@ const EditUser = ({
                 description: usuarioEditado.message
             })
 
-            router.push('/medico');
+            router.push('/usuario');
             
         }).catch(erro => {
             toast({
@@ -80,11 +80,14 @@ const EditUser = ({
     useEffect(() => {
 
         userService.findById(params.id).then(retorno => {
-            const user = retorno.data.data
-            form.setValue("id", user.id);
-            form.setValue("name", user.name);
-            form.setValue("userName", user.userName);
-            form.setValue("password", user.password);
+            const user = retorno.data
+            form.reset({
+                id: user.id,
+                nome: user.nome,
+                usuario: user.usuario,
+                senha: user.senha,
+                perfil: user.perfil
+            });
         }).catch(erro => {
             console.log(erro.data);
         })
@@ -92,7 +95,7 @@ const EditUser = ({
 
     return (
         <div className="overflow-auto p-2">
-            <h1 className="text-3xl">Editar Sala</h1>
+            <h1 className="text-3xl">Editar Usuário</h1>
             <div className="mt-4 flex flex-col gap-5">
                 <h2 className="mb-2 font-bold">Dados principais</h2>
 
@@ -100,7 +103,7 @@ const EditUser = ({
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="nome"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nome</FormLabel>
@@ -113,7 +116,7 @@ const EditUser = ({
                         />
                         <FormField
                             control={form.control}
-                            name="userName"
+                            name="usuario"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Usuário</FormLabel>
@@ -126,13 +129,35 @@ const EditUser = ({
                         />
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="senha"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Usuário</FormLabel>
+                                    <FormLabel>Senha</FormLabel>
                                     <FormControl>
                                         <Input type="password" {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="perfil"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Perfil</FormLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Defina o perfil do usuário" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="MEDICO">MEDICO</SelectItem>
+                                            <SelectItem value="SECRETARIO">SECRETARIO</SelectItem>
+                                            <SelectItem value="DIRETOR">DIRETOR</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}

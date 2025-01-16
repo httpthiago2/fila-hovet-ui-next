@@ -40,11 +40,11 @@ const UserTable = ({ columns, data }: { columns: Column[]; data: User[] }) => {
     const userService = new UserService();
 
     const handleVisualizeUser= (id: number) => {
-        push(`/medico/visualizar/${id}`)
+        push(`/usuario/visualizar/${id}`)
     };
 
     const handleEditUser = (id: number) => {
-        push(`/medico/editar/${id}`)
+        push(`/usuario/editar/${id}`)
     };
 
     const handleRemoveUser = async (id: number) => {

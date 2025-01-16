@@ -18,8 +18,8 @@ export class UserService {
         return axiosInstance.post(`/usuario`, dados);
     }
 
-    update(dados: any) {
-        return axiosInstance.put(`/usuario`, dados);
+    update(id: string, dados: any) {
+        return axiosInstance.put(`/usuario/${id}`, dados);
     }
 
     delete(id: number) {
