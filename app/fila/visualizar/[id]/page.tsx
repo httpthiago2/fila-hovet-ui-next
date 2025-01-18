@@ -126,13 +126,13 @@ const QueueVisualize = ({
                 </div>
 
                 <div className="mb-2">
-                    <Label>Código</Label>
+                    <Label>Prefixo da senha</Label>
                     <Input className="mt-2" disabled={true} value={fila?.codigo || ''} />
                 </div>
             </div>
 
             <div id="queue-table" className="mt-4">
-                <h2 className="mb-2 font-bold">Prontuários</h2>
+                <h2 className="mb-2 font-bold">Senhas</h2>
 
                 <div className="flex flex-row gap-3 mt-5">
                     <Calendar

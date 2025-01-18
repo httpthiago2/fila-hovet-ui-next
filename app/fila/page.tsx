@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation"
 function FilaPage() {
     const columns = [
         { name: 'ID' },
-        { name: 'Código' },
+        { name: 'Prefixo senha' },
         { name: 'Nome' },
         { name: 'Status' },
         { name: 'Médico' },

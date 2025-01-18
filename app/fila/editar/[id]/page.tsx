@@ -244,7 +244,7 @@ const EditQueue = ({
                             name="codigo"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Código</FormLabel>
+                                    <FormLabel>Prefixo da senha</FormLabel>
                                     <FormControl>
                                         <Input placeholder="" {...field} />
                                     </FormControl>

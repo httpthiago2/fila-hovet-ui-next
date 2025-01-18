@@ -6,6 +6,8 @@ import { FaUser, FaUserDoctor } from "react-icons/fa6";
 import { MdPets } from "react-icons/md";
 import { PiTelevisionSimple } from "react-icons/pi";
 import { BsFillHouseDoorFill } from "react-icons/bs";
+import filaHovetLogo from '../public/logo_hovet.jpg';
+import Image from "next/image";
 
 
 
@@ -21,11 +23,18 @@ function Sidebar() {
 
     return (
         <div className="flex flex-row">
-            <div className={`bg-sysfila-green h-screen p-5 pt-8 ${open ? 'w-72' : 'w-20'} duration-300 relative`}>
-                <BsArrowLeftShort className={`bg-white text-sysfila-green text-3xl rounded-full absolute -right-3 top-9 border border-sysfila-green cursor-pointer ${!open && 'rotate-180'}`} onClick={() => setOpen(!open)} />
 
+            <div className={`bg-sysfila-green h-screen p-5 pt-8 ${open ? 'w-72' : 'w-20'} duration-300 relative`}>
+                {open && <Image
+                    alt="Logo Hospital Veterinário UFRA"
+                    src={filaHovetLogo}
+                    width={300}
+                    height={200} />}
+                    <br />
+                <BsArrowLeftShort className={`bg-white text-sysfila-green text-3xl rounded-full absolute -right-3 top-9 border border-sysfila-green cursor-pointer ${!open && 'rotate-180'}`} onClick={() => setOpen(!open)} />
                 <Link href=''>
                     <div className="inline-flex cursor-pointer">
+
                         <PiTelevisionSimple className={`text-white text-3xl self-center mr-2 duration-500 ${open && 'rotate-[360deg]'}`} />
                         <div className={`duration-300 ${!open && 'scale-0'}`}>
                             <span className="text-white text-3xl">FILA</span>

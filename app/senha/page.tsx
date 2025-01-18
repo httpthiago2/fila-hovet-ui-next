@@ -31,7 +31,7 @@ import ProntuarioTable from "./_table"
 
 function ProntuarioPage() {
     const columns = [
-        { name: 'Código' },
+        { name: 'Prefixo senha' },
         { name: 'Nome do PET' },
         { name: 'Tutor' },
         { name: 'Tipo' },

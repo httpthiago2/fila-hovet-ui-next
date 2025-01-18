@@ -118,7 +118,9 @@ function FilaMonitoramentoPage({
 
             <div className="mb-5">
                 <h2 className="text-2xl font-bold mb-5">SENHA ATUAL</h2>
-                <SenhaComponent dados={fila?.senhaAtual} />
+                {
+                    fila?.senhaAtual ? <SenhaComponent dados={fila.senhaAtual}/> : <p className="text-2xl">Não há senha em atendimento no momento. Aguarde o médico chamar o próximo</p>
+                }
             </div>
 
             <div className="mb-5">
